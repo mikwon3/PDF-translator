@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=PaperKo
+Comment=A paperko application
+# The Exec line includes %u to pass the URL to the application
+Exec=/usr/local/bin/paperko %u
+Terminal=false
+Type=Application
+Icon=paperko
+Categories=Utility;
+StartupWMClass=paperko
+
+ 

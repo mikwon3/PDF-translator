@@ -1,0 +1,130 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://paperko/schemas/document-ir.schema.json",
+  "title": "Document IR",
+  "description": "Intermediate representation produced by layout analysis (03-detailed-design.md §1).",
+  "type": "object",
+  "required": ["ir_version", "doc_id", "pages"],
+  "properties": {
+    "ir_version": { "type": "string" },
+    "doc_id": { "type": "string" },
+    "source_path": { "type": "string" },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "page_count": { "type": "integer" },
+        "has_text_layer": { "type": "boolean" },
+        "language": { "type": "string" }
+      }
+    },
+    "pages": { "type": "array", "items": { "$ref": "#/definitions/page" } },
+    "translation_units": { "type": "array", "items": { "$ref": "#/definitions/tu" } },
+    "stats": { "type": "object" }
+  },
+  "definitions": {
+    "bbox": {
+      "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4,
+      "description": "[x0, y0, x1, y1] in PDF points, top-left origin"
+    },
+    "page": {
+      "type": "object",
+      "required": ["index", "width", "height", "blocks"],
+      "properties": {
+        "index": { "type": "integer", "minimum": 0 },
+        "width": { "type": "number" },
+        "height": { "type": "number" },
+        "rotation": { "type": "integer" },
+        "ocr_used": { "type": "boolean" },
+        "columns": {
+          "type": "array",
+          "items": { "type": "object", "required": ["x0", "x1"],
+            "properties": { "x0": { "type": "number" }, "x1": { "type": "number" } } }
+        },
+        "blocks": { "type": "array", "items": { "$ref": "#/definitions/block" } }
+      }
+    },
+    "block": {
+      "type": "object",
+      "required": ["id", "page", "type", "bbox"],
+      "properties": {
+        "id": { "type": "string" },
+        "page": { "type": "integer" },
+        "type": {
+          "type": "string",
+          "enum": ["title", "heading", "paragraph", "list", "caption", "table",
+                   "figure", "formula", "header", "footer", "footnote", "reference"]
+        },
+        "bbox": { "$ref": "#/definitions/bbox" },
+        "reading_order": { "type": "integer" },
+        "translate": { "type": "boolean" },
+        "continues": { "type": ["string", "null"] },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "bbox": { "$ref": "#/definitions/bbox" },
+              "spans": { "type": "array", "items": { "$ref": "#/definitions/span" } }
+            }
+          }
+        },
+        "style_summary": {
+          "type": "object",
+          "properties": {
+            "font_size": { "type": "number" },
+            "bold": { "type": "boolean" },
+            "italic": { "type": "boolean" },
+            "color": { "type": "string" },
+            "align": { "type": "string", "enum": ["left", "right", "center", "justify"] },
+            "line_height": { "type": "number" },
+            "serif": { "type": "boolean" }
+          }
+        },
+        "confidence": { "type": "number" },
+        "inline_marks": { "type": "array", "items": { "type": "object" } }
+      }
+    },
+    "span": {
+      "type": "object",
+      "required": ["text", "bbox"],
+      "properties": {
+        "text": { "type": "string" },
+        "bbox": { "$ref": "#/definitions/bbox" },
+        "font": { "type": "string" },
+        "size": { "type": "number" },
+        "color": { "type": "string" },
+        "flags": { "type": "object" }
+      }
+    },
+    "tu": {
+      "type": "object",
+      "required": ["id", "block_ids", "source_text"],
+      "properties": {
+        "id": { "type": "string" },
+        "block_ids": { "type": "array", "items": { "type": "string" } },
+        "source_text": { "type": "string" },
+        "placeholders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["key", "kind", "raw"],
+            "properties": {
+              "key": { "type": "string" },
+              "kind": { "type": "string", "enum": ["math", "citation", "url", "code"] },
+              "raw": { "type": "string" },
+              "span_ref": { "type": ["array", "null"] }
+            }
+          }
+        },
+        "context": { "type": "object" },
+        "term_hits": { "type": "array", "items": { "type": "object" } },
+        "status": { "type": "string", "enum": ["pending", "running", "done", "failed", "skipped"] },
+        "target_text": { "type": ["string", "null"] },
+        "attempts": { "type": "integer" },
+        "error": { "type": ["object", "null"] },
+        "edited_by_user": { "type": "boolean" }
+      }
+    }
+  }
+}

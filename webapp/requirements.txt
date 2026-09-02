@@ -1,0 +1,9 @@
+# PaperKo Web server. Install the engine too:  pip install ../engine-py
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9
+# engine deps (also pulled in by installing ../engine-py):
+pymupdf>=1.24
+httpx>=0.27
+pysbd>=0.3.4
+pyahocorasick>=2.0

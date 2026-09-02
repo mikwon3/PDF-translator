@@ -1,0 +1,15 @@
+{
+	"fixed": {
+		"file_version": "1.8.2"
+	},
+	"info": {
+		"0000": {
+			"ProductVersion": "1.8.2",
+			"CompanyName": "Gyeongsang National University",
+			"FileDescription": "PaperKo — 학술 논문 PDF 한국어 번역",
+			"LegalCopyright": "© 2026",
+			"ProductName": "PaperKo",
+			"Comments": "Academic paper PDF Korean translator"
+		}
+	}
+}

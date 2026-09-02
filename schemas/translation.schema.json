@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://paperko/schemas/translation.schema.json",
+  "title": "Translation checkpoint",
+  "description": "translation.json — per-TU translation state, checkpointed atomically after every completed unit (03-detailed-design.md §5.6).",
+  "type": "object",
+  "required": ["doc_id", "translation_units"],
+  "properties": {
+    "doc_id": { "type": "string" },
+    "cancelled": { "type": "boolean" },
+    "stats": {
+      "type": "object",
+      "properties": {
+        "tu_total": { "type": "integer" },
+        "tu_done": { "type": "integer" },
+        "tu_failed": { "type": "integer" },
+        "retries": { "type": "integer" },
+        "tokens_prompt": { "type": "integer" },
+        "tokens_completion": { "type": "integer" }
+      }
+    },
+    "translation_units": {
+      "type": "array",
+      "items": { "$ref": "document-ir.schema.json#/definitions/tu" }
+    }
+  }
+}

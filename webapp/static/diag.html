@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PaperKo 진단</title>
+  <style>
+    body{font-family:-apple-system,"Apple SD Gothic Neo",system-ui,sans-serif;margin:20px;color:#1c2430}
+    h1{font-size:18px}
+    #log{background:#0b1020;color:#d6e2ff;padding:12px;border-radius:8px;font:12px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap;word-break:break-all;max-height:70vh;overflow:auto}
+    .sse{color:#7ee787}.poll{color:#79c0ff}.err{color:#ff7b72}.hd{color:#ffd479}
+    button{font:inherit;padding:8px 14px;border-radius:8px;border:1px solid #ccc;background:#fff;cursor:pointer;margin-bottom:10px}
+  </style>
+</head>
+<body>
+  <h1>PaperKo 웹 진단 (SSE / 폴링)</h1>
+  <p>이 페이지는 작은 샘플 PDF로 업로드→번역→진행 이벤트 수신을 실제로 시험합니다. 아래 로그를 확인/캡처해 알려주세요.</p>
+  <button id="run">▶ 다시 실행</button>
+  <div id="log"></div>
+  <script>
+    const log = document.getElementById('log')
+    const t0 = () => performance.now()
+    let start = t0()
+    const ts = () => ((t0() - start) / 1000).toFixed(1) + 's'
+    function line(cls, ...a) {
+      const el = document.createElement('div')
+      if (cls) el.className = cls
+      el.textContent = a.join(' ')
+      log.appendChild(el); log.scrollTop = log.scrollHeight
+    }
+    async function runTest() {
+      log.innerHTML = ''; start = t0()
+      line('hd', 'UA:', navigator.userAgent)
+      try {
+        line('hd', ts(), 'fetch sample PDF...')
+        const blob = await fetch('/api/_sample').then(r => r.blob())
+        const file = new File([blob], 'diag.pdf', { type: 'application/pdf' })
+        const uf = new FormData(); uf.append('file', file)
+        const up = await fetch('/api/upload', { method: 'POST', body: uf }).then(r => r.json())
+        const jid = up.job_id
+        line('hd', ts(), 'uploaded job=', jid)
+        const tf = new FormData(); tf.append('job_id', jid); tf.append('pages', '1')
+        const tr = await fetch('/api/translate', { method: 'POST', body: tf })
+        line('hd', ts(), 'translate POST status=', tr.status)
+
+        const es = new EventSource('/api/jobs/' + jid + '/events')
+        es.onopen = () => line('sse', ts(), 'SSE open')
+        es.onmessage = m => line('sse', ts(), 'SSE ' + m.data.slice(0, 70))
+        es.onerror = () => line('err', ts(), 'SSE error readyState=' + es.readyState)
+
+        let n = 0
+        const iv = setInterval(async () => {
+          try {
+            const s = await fetch('/api/jobs/' + jid + '/status').then(r => r.json())
+            line('poll', ts(), 'POLL state=' + s.state + ' out=' + s.has_out)
+            if (s.state === 'done' || s.state === 'failed' || ++n > 30) {
+              clearInterval(iv); es.close(); line('hd', ts(), '=== END ===')
+            }
+          } catch (e) { line('err', ts(), 'POLL error ' + e.message) }
+        }, 2000)
+      } catch (e) {
+        line('err', ts(), 'FATAL ' + e.message)
+      }
+    }
+    document.getElementById('run').onclick = runTest
+    runTest()
+  </script>
+</body>
+</html>
