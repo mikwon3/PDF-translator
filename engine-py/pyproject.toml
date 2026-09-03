@@ -28,7 +28,7 @@ include = ["translate_engine*"]
 
 [tool.setuptools.package-data]
 translate_engine = [
-    "fonts/*.ttf", "fonts/*.otf", "fonts/OFL.txt", "tessdata/*.traineddata",
+    "fonts/*.ttf", "fonts/*.otf", "fonts/*.txt", "tessdata/*.traineddata",
     "hwpx/scripts/*.py", "hwpx/assets/*.hwpx", "hwpx/assets/*.xml",
 ]
 
