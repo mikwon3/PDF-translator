@@ -10,6 +10,36 @@ interface Props {
   onSaved: (s: Settings) => void
 }
 
+// Commercial LLM providers reachable through their OpenAI-compatible endpoints, plus
+// "custom" for a self-hosted vLLM/LM Studio server. Model lists are convenient starters
+// — the exact model can be typed or fetched with [모델 불러오기].
+interface Provider { label: string; url: string; models: string[]; keyHint: string; keyUrl: string }
+const PROVIDERS: Record<string, Provider> = {
+  custom: { label: '직접 입력 (OpenAI 호환 서버)', url: '', models: [], keyHint: '비어 있으면 미사용', keyUrl: '' },
+  openai: {
+    label: 'OpenAI (ChatGPT)', url: 'https://api.openai.com/v1',
+    models: ['gpt-4o', 'gpt-4o-mini', 'gpt-4.1', 'gpt-4.1-mini'],
+    keyHint: 'sk-…', keyUrl: 'https://platform.openai.com/api-keys',
+  },
+  anthropic: {
+    label: 'Anthropic (Claude)', url: 'https://api.anthropic.com/v1',
+    models: ['claude-sonnet-4-5', 'claude-opus-4-1', 'claude-haiku-4-5'],
+    keyHint: 'sk-ant-…', keyUrl: 'https://console.anthropic.com/settings/keys',
+  },
+  gemini: {
+    label: 'Google (Gemini)', url: 'https://generativelanguage.googleapis.com/v1beta/openai',
+    models: ['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-2.0-flash'],
+    keyHint: 'AIza…', keyUrl: 'https://aistudio.google.com/apikey',
+  },
+}
+function providerFromUrl(url: string): string {
+  const u = (url || '').toLowerCase()
+  if (u.includes('api.openai.com')) return 'openai'
+  if (u.includes('api.anthropic.com')) return 'anthropic'
+  if (u.includes('generativelanguage.googleapis.com')) return 'gemini'
+  return 'custom'
+}
+
 export default function SettingsModal({ initial, onClose, onSaved }: Props) {
   const [s, setS] = useState<Settings>({ ...initial })
   const { lang: ctxLang } = useT()
@@ -21,6 +51,20 @@ export default function SettingsModal({ initial, onClose, onSaved }: Props) {
   const [models, setModels] = useState<string[]>([])
   const [loadingModels, setLoadingModels] = useState(false)
   const [modelError, setModelError] = useState('')
+  const [provider, setProvider] = useState<string>(providerFromUrl(initial.llm_base_url))
+
+  // Pick a provider: fill its OpenAI-compatible endpoint and suggest its models. The
+  // URL/model/key stay editable, and "custom" keeps whatever the user typed.
+  function applyProvider(p: string) {
+    setProvider(p)
+    const pr = PROVIDERS[p]
+    if (p === 'custom' || !pr) return
+    set('llm_base_url', pr.url)
+    setModels([]); setModelError(''); setHealth(null)
+    if (pr.models.length && !pr.models.includes(s.llm_model)) set('llm_model', pr.models[0])
+  }
+  // model choices: fetched list if available, else the selected provider's starters
+  const modelList = models.length ? models : (PROVIDERS[provider]?.models || [])
 
   // local (offline) engine state
   const [info, setInfo] = useState<LocalModelInfo | null>(null)
@@ -196,9 +240,18 @@ export default function SettingsModal({ initial, onClose, onSaved }: Props) {
         ) : (
         <>
         <div className="field">
-          <label>{t('vLLM 서버 URL (OpenAI 호환)')}</label>
+          <label>{t('LLM 공급자')}</label>
+          <select value={provider} onChange={(e) => applyProvider(e.target.value)}>
+            <option value="custom">{t('직접 입력 (OpenAI 호환 서버)')}</option>
+            <option value="openai">OpenAI (ChatGPT)</option>
+            <option value="anthropic">Anthropic (Claude)</option>
+            <option value="gemini">Google (Gemini)</option>
+          </select>
+        </div>
+        <div className="field">
+          <label>{provider === 'custom' ? t('vLLM 서버 URL (OpenAI 호환)') : t('API 주소')}</label>
           <div className="inline">
-            <input value={s.llm_base_url} onChange={(e) => set('llm_base_url', e.target.value)}
+            <input value={s.llm_base_url} onChange={(e) => { set('llm_base_url', e.target.value); setProvider(providerFromUrl(e.target.value)) }}
               placeholder="http://203.255.40.88:8567/v1" />
             <button className="ghost sm" onClick={loadModels} disabled={loadingModels || !s.llm_base_url.trim()}>
               {loadingModels ? t('불러오는 중…') : t('모델 불러오기')}
@@ -207,24 +260,29 @@ export default function SettingsModal({ initial, onClose, onSaved }: Props) {
         </div>
         <div className="field">
           <label>{t('모델 선택')}</label>
-          {models.length > 0 ? (
+          {modelList.length > 0 ? (
             <select value={s.llm_model} onChange={(e) => set('llm_model', e.target.value)}>
-              {!models.includes(s.llm_model) && s.llm_model && (
+              {!modelList.includes(s.llm_model) && s.llm_model && (
                 <option value={s.llm_model}>{s.llm_model}{t(' (현재)')}</option>
               )}
-              {models.map((m) => <option key={m} value={m}>{m}</option>)}
+              {modelList.map((m) => <option key={m} value={m}>{m}</option>)}
             </select>
           ) : (
             <input value={s.llm_model} onChange={(e) => set('llm_model', e.target.value)}
               placeholder={t('URL 입력 후 [모델 불러오기] 또는 직접 입력')} />
           )}
           {modelError && <div className="dim sm" style={{ color: '#dc2626' }}>{modelError}</div>}
-          {models.length > 0 && <div className="dim sm">{models.length}{t('개 모델 · 목록에서 선택')}</div>}
+          {models.length > 0
+            ? <div className="dim sm">{models.length}{t('개 모델 · 목록에서 선택')}</div>
+            : (provider !== 'custom' && <div className="dim sm">{t('추천 모델 · 정확한 모델명은 [모델 불러오기] 또는 직접 입력')}</div>)}
         </div>
         <div className="field">
-          <label>{t('API 키 (필요 시)')}</label>
+          <label>{provider === 'custom' ? t('API 키 (필요 시)') : t('API 키')}</label>
           <input type="password" value={s.llm_api_key} onChange={(e) => set('llm_api_key', e.target.value)}
-            placeholder={t('비어 있으면 미사용')} />
+            placeholder={PROVIDERS[provider]?.keyHint ? t(PROVIDERS[provider].keyHint) : t('비어 있으면 미사용')} />
+          {provider !== 'custom' && PROVIDERS[provider]?.keyUrl && (
+            <div className="dim sm">{t('키 발급')}: <a href={PROVIDERS[provider].keyUrl} target="_blank" rel="noreferrer">{PROVIDERS[provider].keyUrl}</a></div>
+          )}
         </div>
 
         <div className="test-row">

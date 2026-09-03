@@ -91,6 +91,11 @@ class QwenClient:
         # where unsupported: OpenAI-standard `reasoning_effort` (LM Studio),
         # Qwen/vLLM `chat_template_kwargs.enable_thinking`, and `reasoning.enabled`.
         self.reasoning_effort = reasoning_effort
+        # Commercial OpenAI-compatible APIs (OpenAI/Anthropic/Gemini) reject unknown
+        # request fields with a 400. Detect them and send only widely-supported
+        # parameters — no vLLM/Qwen extensions (chat_template_kwargs, reasoning*, seed).
+        self._strict = any(h in self.base_url for h in (
+            "api.openai.com", "api.anthropic.com", "generativelanguage.googleapis.com"))
         self._bp = _Backpressure(base=max_concurrency, current=max_concurrency)
         self._sem = asyncio.Semaphore(max_concurrency)
         self._client: httpx.AsyncClient | None = None
@@ -155,15 +160,17 @@ class QwenClient:
             "top_p": top_p,
             "max_tokens": max_tokens,
             "stream": False,
-            # suppress "thinking" for low-latency deterministic output (03 §4.3);
-            # multiple switches so it works across vLLM / LM Studio / others
-            "chat_template_kwargs": {"enable_thinking": False},
         }
-        if self.reasoning_effort is not None:
-            payload["reasoning_effort"] = self.reasoning_effort          # OpenAI/LM Studio
-            payload["reasoning"] = {"enabled": self.reasoning_effort != "none"}
-        if self.seed is not None:
-            payload["seed"] = self.seed
+        if not self._strict:
+            # suppress "thinking" for low-latency deterministic output (03 §4.3);
+            # multiple switches so it works across vLLM / LM Studio / others. These are
+            # non-standard fields — omitted for commercial APIs which reject them.
+            payload["chat_template_kwargs"] = {"enable_thinking": False}
+            if self.reasoning_effort is not None:
+                payload["reasoning_effort"] = self.reasoning_effort      # OpenAI/LM Studio
+                payload["reasoning"] = {"enabled": self.reasoning_effort != "none"}
+            if self.seed is not None:
+                payload["seed"] = self.seed
         if extra_body:
             payload.update(extra_body)
 
