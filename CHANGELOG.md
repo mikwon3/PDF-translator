@@ -5,7 +5,7 @@ All notable changes to PaperKo are recorded here. Versioning follows
 under the **same** version number; the JSON-RPC `protocol_version` and IR
 `ir_version` are tracked separately.
 
-## [1.8.2] — 2026-08-29
+## [1.8.3] — 2026-09-03
 
 ### Added
 - **Commercial LLM providers (OpenAI / Anthropic / Google).** Settings gains an **LLM
@@ -15,6 +15,10 @@ under the **same** version number; the JSON-RPC `protocol_version` and IR
   send only widely-supported fields (the vLLM/Qwen extensions `chat_template_kwargs`,
   `reasoning*`, `seed` are omitted, which those APIs reject); a self-hosted vLLM/LM
   Studio server still gets the full set. Just paste an API key and pick a model.
+
+## [1.8.2] — 2026-08-29
+
+### Added
 - **General-document mode with split / resumable batch translation.** The app keeps
   its academic-paper UI by default, but a **문서 유형 (학술 논문 / 일반 문서)** toggle —
   auto-recommending 일반 문서 for long files (>30 pages) — switches to a workflow built
