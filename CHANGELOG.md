@@ -5,6 +5,22 @@ All notable changes to PaperKo are recorded here. Versioning follows
 under the **same** version number; the JSON-RPC `protocol_version` and IR
 `ir_version` are tracked separately.
 
+## [1.8.5] — 2026-09-26
+
+### Changed
+- **Author/copyright credits.** The in-app About dialog and the macOS/Windows bundle
+  properties now credit **Minho Kwon (@mikwon3)** with contact **mikwon@me.com**; the
+  About license label is corrected to **AGPL-3.0**, and the department/organization
+  fields are dropped. macOS `NSHumanReadableCopyright`, Windows `CompanyName`/
+  `LegalCopyright`, and the NSIS publisher are set accordingly.
+
+### Docs
+- Verified-journal table expanded with 6 more journals across 2 new publisher series
+  (Hindawi, ASCE): _Structures_ and _Journal of Building Engineering_ (Elsevier),
+  _Journal of Structural Engineering_ (ASCE), _Advances in Structural Engineering_ (SAGE),
+  _Earthquake Engineering & Structural Dynamics_ (Wiley), and _Journal of Applied
+  Mathematics_ (Hindawi).
+
 ## [1.8.4] — 2026-09-25
 
 ### Added
@@ -21,14 +37,6 @@ under the **same** version number; the JSON-RPC `protocol_version` and IR
   is distributed under AGPL-3.0 with full corresponding source published at
   `mikwon3/PDF-translator`.
 - Bundled Python no longer ships pip console scripts (smaller bundle).
-
-### Docs
-- Verified-journal table expanded with 6 more journals across 2 new publisher series
-  (Hindawi, ASCE): _Structures_ and _Journal of Building Engineering_ (Elsevier),
-  _Journal of Structural Engineering_ (ASCE), _Advances in Structural Engineering_ (SAGE),
-  _Earthquake Engineering & Structural Dynamics_ (Wiley), and _Journal of Applied
-  Mathematics_ (Hindawi). Publisher-series coverage is now 8 journal series + 2 code/spec
-  series (ACI, CSA).
 
 ## [1.8.3] — 2026-09-03
 
