@@ -5,6 +5,23 @@ All notable changes to PaperKo are recorded here. Versioning follows
 under the **same** version number; the JSON-RPC `protocol_version` and IR
 `ir_version` are tracked separately.
 
+## [1.8.4] — 2026-09-25
+
+### Added
+- **Online auto-update.** On startup the app checks for a new version (at most once a
+  day; can be turned off or a version skipped in Settings) and can download and install
+  a signed release itself — macOS swaps in the new `.app` and relaunches, Windows hands
+  off to the NSIS installer. Release manifests are verified with an embedded Ed25519
+  public key and installers by SHA-256. Manual "지금 업데이트 확인" is in Settings.
+  Releases are published to the public repo `mikwon3/PaperKo-releases` via
+  `scripts/release.sh`; see `internal/update` and `cmd/releasetool`.
+
+### Changed
+- **Licensed under AGPL-3.0.** PaperKo bundles PyMuPDF (AGPL-3.0), so the combined work
+  is distributed under AGPL-3.0 with full corresponding source published at
+  `mikwon3/PDF-translator`.
+- Bundled Python no longer ships pip console scripts (smaller bundle).
+
 ## [1.8.3] — 2026-09-03
 
 ### Added
