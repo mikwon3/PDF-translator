@@ -126,7 +126,7 @@ cd desktop/paperko
 
 ## 라이선스 / 표기
 
-**개발:** Minho Kwon ([@mikwon3](https://github.com/mikwon3)) · kwonm@gnu.ac.kr
+**개발:** Minho Kwon ([@mikwon3](https://github.com/mikwon3)) · mikwon@me.com
 © 2026 Minho Kwon
 
 PaperKo 는 **GNU Affero General Public License v3.0 (AGPL-3.0)** 으로 배포합니다
