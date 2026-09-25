@@ -15,6 +15,7 @@ export interface Settings {
   local_model_path: string
   local_model_sha256: string
   hf_token: string
+  update?: { noAutoCheck?: boolean; skipVersion?: string; lastCheck?: string }
 }
 
 // A translation that can be continued (interrupted/cancelled/failed with a checkpoint).
@@ -30,6 +31,19 @@ export interface ResumableJob {
   total_pages: number
   done_page_list: number[]   // 0-based pages fully translated (to restore batches)
   updated_at: string
+}
+
+// Result of an online update check (mirrors services.UpdateInfo).
+export interface UpdateInfo {
+  checked: boolean
+  available: boolean
+  current: string
+  latest: string
+  notes: string
+  published: string
+  size: number
+  canInstall: boolean
+  page: string
 }
 
 export interface LocalModelInfo {

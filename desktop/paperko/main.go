@@ -20,7 +20,7 @@ import (
 var assets embed.FS
 
 // devRepoRoot is used in `wails3 dev` to locate the Python engine + venv.
-const devRepoRoot = "/Volumes/LLM-model/Dropbox/App-develop/PDF-translator"
+const devRepoRoot = "/Volumes/LLM-model/App-develop/PDF-translator"
 
 func main() {
 	logger := slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelInfo}))
@@ -39,6 +39,7 @@ func main() {
 			application.NewService(&services.JobService{B: backend}),
 			application.NewService(&services.SettingsService{B: backend}),
 			application.NewService(&services.GlossaryService{B: backend}),
+			application.NewService(&services.UpdateService{B: backend}),
 		},
 		Assets: application.AssetOptions{
 			Handler: application.AssetFileServerFS(assets),

@@ -20,12 +20,12 @@ type Settings struct {
 	LLMModel       string `json:"llm_model"`
 	LLMAPIKey      string `json:"llm_api_key"`
 	MaxConcurrency int    `json:"max_concurrency"`
-	Style          string `json:"style"`        // formal | concise
-	FontFamily     string `json:"font_family"`  // noto | nanum
-	Mode           string `json:"mode"`         // replace | interleaved
-	UILanguage     string `json:"ui_language"`  // ko | en
-	SourceLang     string `json:"source_lang"`  // auto | en | ko | ja | zh … (document's language)
-	TargetLang     string `json:"target_lang"`  // Korean | English | …          (translation language)
+	Style          string `json:"style"`       // formal | concise
+	FontFamily     string `json:"font_family"` // noto | nanum
+	Mode           string `json:"mode"`        // replace | interleaved
+	UILanguage     string `json:"ui_language"` // ko | en
+	SourceLang     string `json:"source_lang"` // auto | en | ko | ja | zh … (document's language)
+	TargetLang     string `json:"target_lang"` // Korean | English | …          (translation language)
 
 	// Local inference (offline) — run a bundled llama.cpp server against a local GGUF.
 	EngineMode       string `json:"engine_mode"`        // remote | local  (default remote)
@@ -34,6 +34,31 @@ type Settings struct {
 	LocalModelPath   string `json:"local_model_path"`   // remembered GGUF path (downloaded or picked)
 	LocalModelSHA256 string `json:"local_model_sha256"` // integrity hash (computed on download; verified if set)
 	HFToken          string `json:"hf_token"`           // optional Hugging Face token for gated models
+
+	// Update — online update checking (see internal/update).
+	Update UpdatePrefs `json:"update"`
+}
+
+// UpdatePrefs holds the online-update settings.
+type UpdatePrefs struct {
+	// NoAutoCheck, when true, skips the automatic check on startup (a manual check
+	// from Settings still works). Stored as "off" so an older settings.json without
+	// the field still starts with auto-check on.
+	NoAutoCheck bool `json:"noAutoCheck,omitempty"`
+	// SkipVersion is the version the user chose to skip; honored only by auto-checks.
+	SkipVersion string `json:"skipVersion,omitempty"`
+	// LastCheck is when we last asked (RFC3339); auto-check runs at most once a day.
+	LastCheck string `json:"lastCheck,omitempty"`
+}
+
+// updateUpdatePrefs mutates the update settings under the lock and persists them,
+// returning a snapshot. Used by UpdateService (mirrors a settings store's Update).
+func (b *Backend) updateUpdatePrefs(fn func(*UpdatePrefs)) Settings {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	fn(&b.settings.Update)
+	_ = b.saveSettingsFile()
+	return b.settings
 }
 
 // defaultGemmaURL is the recommended offline model (Google Gemma-4 E2B, int4 QAT).
@@ -186,6 +211,10 @@ func (s *SettingsService) GetSettings() Settings {
 
 func (s *SettingsService) SaveSettings(next Settings) error {
 	s.B.mu.Lock()
+	// The update prefs (auto-check, skip, last-check) are owned by UpdateService and
+	// written live; keep the current ones so a general save can't clobber them with a
+	// stale copy from the frontend.
+	next.Update = s.B.settings.Update
 	s.B.settings = next
 	err := s.B.saveSettingsFile()
 	s.B.mu.Unlock()

@@ -26,6 +26,9 @@ PaperKo는 논문·설계기준·시방서·가이드북 같은 PDF를 열어, �
 - **OCR** — 스캔·이미지 PDF도 번역(PyMuPDF 내장 Tesseract, 영어 데이터 번들). 스캔 문서의 그림도
   잘라 보존합니다.
 - **오프라인 모드** — 서버 없이 번들 `llama.cpp` + 로컬 GGUF 모델로 번역 가능.
+- **온라인 자동 업데이트** — 시작 시 새 판을 확인해(하루 1회, 끄기·건너뛰기 가능) 서명된 릴리스를
+  받아 스스로 설치한다. macOS 는 새 `.app` 으로 교체 후 재실행, Windows 는 설치 프로그램이 이어받는다.
+  릴리스 정보(manifest)는 Ed25519 서명으로 검증하고 설치본은 SHA-256 으로 대조한다(`internal/update`).
 
 ## 검증된 문서 형식
 
@@ -99,6 +102,24 @@ wails3 dev
    - 오프라인: **로컬 모델** 탭에서 GGUF 다운로드 또는 파일 선택
 2. **📂 PDF 열기** → (긴 문서면 자동으로 *일반 문서* 모드 추천) → **▶ 번역 시작** 또는 페이지 범위 배치 번역
 3. 완료 후 **PDF / 한글(HWPX) / Word(DOCX)** 로 저장
+
+## 릴리스 배포 (온라인 업데이트)
+
+설치본과 서명된 `manifest.json` 을 **공개** 저장소(`mikwon3/PaperKo-releases`)의 GitHub 릴리스에
+올리면, 설치된 앱이 그 최신 릴리스를 읽어 스스로 업데이트한다. 소스 저장소는 비공개다.
+
+```bash
+cd desktop/paperko
+./scripts/release.sh 1.8.4 release-notes/1.8.4.md            # 판 올림·빌드·서명·업로드
+./scripts/release.sh 1.8.4 release-notes/1.8.4.md --dry-run  # 올리지 않고 확인만
+```
+
+- **서명 개인키**(Ed25519)는 저장소 밖 `~/Library/Application Support/PaperKo/release-key/paperko-release.key`
+  에만 둔다. **잃어버리면 이미 설치된 앱이 받아들일 새 판을 더는 만들 수 없으므로 꼭 백업**한다.
+  (짝이 되는 공개키는 `internal/update/key.go` 에 심겨 있다.)
+- 새 키를 만들려면: `go run ./cmd/releasetool keygen` → 출력된 공개키를 `key.go` 에 넣는다.
+- 시험: `PAPERKO_UPDATE_BASE` 로 릴리스 주소를 로컬 서버로 바꿔 확인할 수 있다(서명은 언제나 심은
+  공개키로 검증하므로 가짜 판은 받지 않는다).
 
 ## 라이선스 / 표기
 

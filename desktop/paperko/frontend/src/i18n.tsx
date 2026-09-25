@@ -156,6 +156,25 @@ const EN: Record<string, string> = {
   'FAILED': 'Failed',
   'PARTIAL': 'Partly done',
   '취소': 'Cancel',
+  '새 판이 나왔습니다': 'A new version is available',
+  '을(를) 받을 수 있습니다. 지금 판은': 'is available. You have',
+  '입니다.': '.',
+  '설치하면 앱이 잠깐 닫혔다가 새 판으로 다시 열립니다. 진행 중인 번역은 먼저 마치거나 저장하십시오.':
+    'Installing closes the app briefly and reopens it on the new version. Finish or save any translation in progress first.',
+  '설치 프로그램이 열리고 앱은 닫힙니다(관리자 권한을 물을 수 있습니다). 진행 중인 번역은 먼저 마치거나 저장하십시오.':
+    'The installer opens and the app closes (it may ask for administrator permission). Finish or save any translation in progress first.',
+  '이 컴퓨터에서는 자동 설치를 하지 않습니다. 릴리스 페이지에서 받아 설치하십시오.':
+    'Automatic install is not available on this computer. Download and install from the release page.',
+  '설치를 시작했습니다. 앱이 곧 닫힙니다…': 'Install started. The app will close shortly…',
+  '지금 설치': 'Install now',
+  '릴리스 페이지 열기': 'Open release page',
+  '이 판 건너뛰기': 'Skip this version',
+  '나중에': 'Later',
+  '업데이트': 'Updates',
+  '시작할 때 새 판 자동 확인': 'Check for new versions on startup',
+  '지금 업데이트 확인': 'Check for updates now',
+  '최신 버전입니다': 'You are up to date',
+  '확인 실패: ': 'Check failed: ',
   '저장': 'Save',
   // glossary modal
   '용어집 관리': 'Glossary manager',

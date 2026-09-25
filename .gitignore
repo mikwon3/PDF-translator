@@ -3,6 +3,7 @@ desktop/paperko/bin/
 desktop/paperko/resources/python/
 desktop/paperko/resources/llama/
 desktop/paperko/paperko_app_bundled
+desktop/paperko/paperko
 desktop/paperko/build/darwin/
 **/node_modules/
 **/dist/

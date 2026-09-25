@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Events } from '@wailsio/runtime'
-import { SettingsService } from '../bindings/paperko/services'
-import type { HealthInfo, LocalModelInfo, Settings } from './types'
+import { SettingsService, UpdateService } from '../bindings/paperko/services'
+import type { HealthInfo, LocalModelInfo, Settings, UpdateInfo } from './types'
 import { useT, tr, type UILang } from './i18n'
 
 interface Props {
   initial: Settings
   onClose: () => void
   onSaved: (s: Settings) => void
+  onFoundUpdate?: (info: UpdateInfo) => void
 }
 
 // Commercial LLM providers reachable through their OpenAI-compatible endpoints, plus
@@ -40,7 +41,7 @@ function providerFromUrl(url: string): string {
   return 'custom'
 }
 
-export default function SettingsModal({ initial, onClose, onSaved }: Props) {
+export default function SettingsModal({ initial, onClose, onSaved, onFoundUpdate }: Props) {
   const [s, setS] = useState<Settings>({ ...initial })
   const { lang: ctxLang } = useT()
   const lang: UILang = (s.ui_language as UILang) || ctxLang       // live preview as you toggle
@@ -71,6 +72,25 @@ export default function SettingsModal({ initial, onClose, onSaved }: Props) {
   const [dl, setDl] = useState<{ received: number; total: number; done?: boolean } | null>(null)
   const [localBusy, setLocalBusy] = useState('')
   const [localErr, setLocalErr] = useState('')
+  const [upChecking, setUpChecking] = useState(false)
+  const [upStatus, setUpStatus] = useState('')
+  const [autoUpdate, setAutoUpdate] = useState<boolean>(!initial.update?.noAutoCheck)
+
+  function toggleAutoUpdate(on: boolean) {
+    setAutoUpdate(on)
+    void UpdateService.SetAutoCheck(on).catch(() => {})
+  }
+  function checkUpdate() {
+    setUpChecking(true); setUpStatus('')
+    UpdateService.Check(true)
+      .then((i) => {
+        const info = i as UpdateInfo
+        if (info.available) { onFoundUpdate?.(info); setUpStatus('') }
+        else setUpStatus(t('최신 버전입니다') + ` (v${info.current})`)
+      })
+      .catch((e: unknown) => setUpStatus(t('확인 실패: ') + ((e as Error)?.message ?? String(e))))
+      .finally(() => setUpChecking(false))
+  }
 
   function set<K extends keyof Settings>(k: K, v: Settings[K]) {
     setS((prev) => ({ ...prev, [k]: v }))
@@ -313,6 +333,20 @@ export default function SettingsModal({ initial, onClose, onSaved }: Props) {
               <option value="nanum-myeongjo">{t('나눔명조 (세리프/명조체)')}</option>
               <option value="noto">{t('Noto Sans KR (fonts 폴더에 있을 때)')}</option>
             </select>
+          </div>
+        </div>
+
+        <div className="field">
+          <label>{t('업데이트')}</label>
+          <label className="check">
+            <input type="checkbox" checked={autoUpdate} onChange={(e) => toggleAutoUpdate(e.target.checked)} />
+            {t('시작할 때 새 판 자동 확인')}
+          </label>
+          <div className="inline" style={{ marginTop: 6 }}>
+            <button className="ghost sm" onClick={checkUpdate} disabled={upChecking}>
+              {upChecking ? t('확인 중…') : t('지금 업데이트 확인')}
+            </button>
+            {upStatus && <span className="dim sm">{upStatus}</span>}
           </div>
         </div>
 

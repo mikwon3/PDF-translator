@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState, type WheelEvent, type MouseEvent } from 'react'
 import { Events } from '@wailsio/runtime'
-import { DocumentService, JobService, SettingsService, GlossaryService } from '../bindings/paperko/services'
-import type { Settings, GlossaryMeta, FailedRegion, ResumableJob } from './types'
+import { DocumentService, JobService, SettingsService, GlossaryService, UpdateService } from '../bindings/paperko/services'
+import type { Settings, GlossaryMeta, FailedRegion, ResumableJob, UpdateInfo } from './types'
 import SettingsModal from './SettingsModal'
 import GlossaryModal from './GlossaryModal'
 import AboutModal from './AboutModal'
+import UpdateDialog from './UpdateDialog'
 import { LangProvider, tr, type UILang } from './i18n'
 import './app.css'
 
@@ -58,6 +59,7 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false)
   const [showGlossary, setShowGlossary] = useState(false)
   const [showAbout, setShowAbout] = useState(false)
+  const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null)
   const [settings, setSettings] = useState<Settings | null>(null)
 
   const [glossaries, setGlossaries] = useState<GlossaryMeta[]>([])
@@ -83,6 +85,11 @@ export default function App() {
   useEffect(() => { SettingsService.GetSettings().then((s) => setSettings(s as Settings)) }, [])
   // On startup, list translations that were left unfinished so the user can resume them.
   useEffect(() => { JobService.ListResumable().then((r) => setResumable((r as ResumableJob[]) || [])).catch(() => {}) }, [])
+  // On startup, quietly check for a newer release (at most once a day; respects the
+  // "auto-check off" and "skip this version" settings). Offer it if there is one.
+  useEffect(() => {
+    UpdateService.Check(false).then((i) => { if (i && i.available) setUpdateInfo(i as UpdateInfo) }).catch(() => {})
+  }, [])
 
   // persist a small settings change (e.g. source/target language) immediately
   async function saveSettingPatch(patch: Partial<Settings>) {
@@ -710,12 +717,14 @@ export default function App() {
       {showSettings && settings && (
         <SettingsModal initial={settings}
           onClose={() => setShowSettings(false)}
-          onSaved={(s) => { setSettings(s); setShowSettings(false) }} />
+          onSaved={(s) => { setSettings(s); setShowSettings(false) }}
+          onFoundUpdate={(i) => { setShowSettings(false); setUpdateInfo(i) }} />
       )}
       {showGlossary && (
         <GlossaryModal onClose={() => { setShowGlossary(false); loadGlossaries() }} />
       )}
       {showAbout && <AboutModal onClose={() => setShowAbout(false)} />}
+      {updateInfo && <UpdateDialog info={updateInfo} onClose={() => setUpdateInfo(null)} />}
     </div>
     </LangProvider>
   )

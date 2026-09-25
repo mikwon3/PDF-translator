@@ -99,6 +99,11 @@ button.danger { background: var(--danger); color: #fff; }
 }
 .empty p { margin: 6px 0; }
 .empty .dim, .dim { color: #9aa4b2; font-size: 13px; }
+.dim.sm, .sm { font-size: 12px; }
+.field label.check { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink); cursor: pointer; }
+.field label.check input[type="checkbox"] { width: auto; margin: 0; }
+.update-notes { max-height: 180px; overflow: auto; white-space: pre-wrap; font-size: 12px; line-height: 1.5; color: var(--muted); background: #f8fafc; border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
+.update-progress { display: flex; flex-direction: column; gap: 6px; }
 
 .pager { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 13px; color: var(--muted); }
 .pager button { padding: 4px 12px; background: #fff; border: 1px solid var(--line); color: var(--ink); }
