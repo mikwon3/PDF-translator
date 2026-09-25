@@ -16,12 +16,12 @@ type About struct {
 
 // --- edit these for your credits -------------------------------------------
 const (
-	aboutAuthor       = "Dasan5"
+	aboutAuthor       = "Minho Kwon (@mikwon3)"
 	aboutDepartment   = "토목공학과 (Dept. of Civil Engineering)"
-	aboutOrganization = "경상국립대학교 (Gyeongsang National University)"
+	aboutOrganization = ""
 	aboutYear         = "2026"
 	aboutContact      = "kwonm@gnu.ac.kr"
-	aboutLicense      = "사내 사용"
+	aboutLicense      = "AGPL-3.0"
 )
 
 // ---------------------------------------------------------------------------

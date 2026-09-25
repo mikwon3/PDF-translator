@@ -1,6 +1,6 @@
 # PaperKo
 
-Copyright 2026 경상국립대학교 (Gyeongsang National University)
+Copyright 2026 Minho Kwon (@mikwon3)
 
 PaperKo 는 **GNU Affero General Public License v3.0 (AGPL-3.0)** 으로 배포합니다.
 전문은 [LICENSE](LICENSE) 에 있습니다.

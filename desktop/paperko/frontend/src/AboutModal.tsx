@@ -37,8 +37,8 @@ export default function AboutModal({ onClose }: { onClose: () => void }) {
           {info?.organization && <div className="about-row"><span>{t('소속')}</span><b>{info.organization}</b></div>}
           {info?.contact && <div className="about-row"><span>{t('문의')}</span><b>{info.contact}</b></div>}
           {info?.license && <div className="about-row"><span>{t('라이선스')}</span><b>{info.license}</b></div>}
-          {(info?.year || info?.organization) && (
-            <div className="about-copy">© {info?.year} {info?.organization}</div>
+          {(info?.year || info?.organization || info?.author) && (
+            <div className="about-copy">© {info?.year} {info?.organization || info?.author}</div>
           )}
         </div>
 
