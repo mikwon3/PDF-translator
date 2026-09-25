@@ -36,7 +36,10 @@ PaperKo는 논문·설계기준·시방서·가이드북 같은 PDF를 열어, �
 (자세한 표는 [`desktop/paperko/README.md`](desktop/paperko/README.md) 참조):
 
 - **저널:** Structural Engineering and Mechanics, Elsevier(2단), KSCE, Earthquake Spectra,
-  Construction and Building Materials, Engineering Structures, MDPI(Polymers), ZAMM
+  Construction and Building Materials, Engineering Structures, Structures, Journal of Building
+  Engineering, MDPI(Polymers), ZAMM, Earthquake Engineering & Structural Dynamics(Wiley),
+  Journal of Structural Engineering(ASCE), Advances in Structural Engineering(SAGE),
+  Journal of Applied Mathematics(Hindawi)
 - **설계기준·시방서:** ACI CODE-440.11-22, CSA S806-12, ACI MNL-723 (OCR 스캔 핸드북)
 
 ## 아키텍처

@@ -22,6 +22,14 @@ under the **same** version number; the JSON-RPC `protocol_version` and IR
   `mikwon3/PDF-translator`.
 - Bundled Python no longer ships pip console scripts (smaller bundle).
 
+### Docs
+- Verified-journal table expanded with 6 more journals across 2 new publisher series
+  (Hindawi, ASCE): _Structures_ and _Journal of Building Engineering_ (Elsevier),
+  _Journal of Structural Engineering_ (ASCE), _Advances in Structural Engineering_ (SAGE),
+  _Earthquake Engineering & Structural Dynamics_ (Wiley), and _Journal of Applied
+  Mathematics_ (Hindawi). Publisher-series coverage is now 8 journal series + 2 code/spec
+  series (ACI, CSA).
+
 ## [1.8.3] — 2026-09-03
 
 ### Added

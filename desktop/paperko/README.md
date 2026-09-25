@@ -71,6 +71,12 @@ PaperKo는 저널별 고정 템플릿을 두지 않고 **범용 레이아웃 분
 | Engineering Structures | Elsevier | 무테 표, DOCX/HWPX 격자 복원 | 1.8 |
 | Polymers | MDPI | 앞면 마스트헤드 로고 + 좌측 메타데이터 사이드바 원문 유지(전용 규칙) | 1.8.1 |
 | ZAMM | Wiley | 약한 모델에서 페이지 커버리지 개선(재조립) | 1.7 |
+| Structures | Elsevier | ScienceDirect front-matter·HIGHLIGHTS 박스, 초록 1단→본문 2단 혼합 레이아웃 유지 | 1.8.1 |
+| Journal of Building Engineering | Elsevier (스캔 1단 OCR) | 스캔 페이지 감지·1단 OCR 흐름 재구성, ScienceDirect front-matter | 1.8.1 |
+| Journal of Structural Engineering | ASCE (2단) | ASCE 2단(초록 1단), DOI·CE Database 헤더, 수식·표 유지 | 1.8.1 |
+| Advances in Structural Engineering | SAGE (2단) | SAGE 2단(초록 1단) front-matter, 러닝헤드 처리 | 1.8.1 |
+| Earthquake Engineering & Structural Dynamics | Wiley (1단) | 구형 Wiley 1단, DOI 10.1002/eqe 헤더 | 1.8.1 |
+| Journal of Applied Mathematics | Hindawi | Hindawi Article-ID 메타 헤더, 초록 1단→본문 2단 혼합, 수식 다수 | 1.8.1 |
 | ACI CODE-440.11-22 | ACI (시방서, 2단 Code/Commentary) | 조항 변경마커(`=`·제어문자 ◆) 및 소프트하이픈 제거; 좌 규정/우 해설 병렬 2단 유지, 표 복원, 조항 헤딩 인식 | 1.8.2 |
 | CSA S806-12 | CSA (시방서, 단일 단 OCR 스캔) | 스캔 페이지 감지 → 이미지 픽셀 redaction + 헤딩 박스 우측 확장으로 스캔 영어 꼬리 제거 | 1.8.2 |
 | ACI MNL-723 GFRP Design Handbook | ACI (설계 핸드북, 단일 단 OCR 스캔) | 본문·워크드 예제 번역 양호, 도면·수식(이미지) 보존; 스캔 redaction을 전 블록으로 확대. 원본 OCR이 놓친 수식 옆 라벨은 겹침 잔존(원본 OCR 품질 한계) | 1.8.2 |
@@ -78,8 +84,8 @@ PaperKo는 저널별 고정 템플릿을 두지 않고 **범용 레이아웃 분
 그 외: **GFRP 논문**(초기 `paper.pdf`)으로 한→영처럼 번역문이 길어지는 **확장 레이아웃**에서
 2단이 유지되는지 검증.
 
-발행 계열로는 **저널 6개(Elsevier · MDPI · KSCE/Springer · SAGE · Wiley · Techno-Press)** 에
-더해 **설계기준·시방서 2개(ACI · CSA)** 를 커버한다. 학술 논문이 아닌 일반 PDF도 번역된다(위
+발행 계열로는 **저널 8개(Elsevier · MDPI · KSCE/Springer · SAGE · Wiley · Techno-Press ·
+Hindawi · ASCE)** 에 더해 **설계기준·시방서 2개(ACI · CSA)** 를 커버한다. 학술 논문이 아닌 일반 PDF도 번역된다(위
 학술 휴리스틱이 매칭되지 않으면 문서 전체가 번역 대상이 됨) — 단, 잡지·브로슈어·슬라이드처럼
 그래픽 위주의 복잡한 편집은 재조판 정확도가 낮다.
 
