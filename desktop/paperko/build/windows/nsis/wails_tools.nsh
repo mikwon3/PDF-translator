@@ -8,7 +8,7 @@
     !define INFO_PROJECTNAME "paperko"
 !endif
 !ifndef INFO_COMPANYNAME
-    !define INFO_COMPANYNAME "My Company"
+    !define INFO_COMPANYNAME "Minho Kwon"
 !endif
 !ifndef INFO_PRODUCTNAME
     !define INFO_PRODUCTNAME "PaperKo"
@@ -17,7 +17,7 @@
     !define INFO_PRODUCTVERSION "1.8.4"
 !endif
 !ifndef INFO_COPYRIGHT
-    !define INFO_COPYRIGHT "© 2026, My Company"
+    !define INFO_COPYRIGHT "© 2026 Minho Kwon · AGPL-3.0"
 !endif
 !ifndef PRODUCT_EXECUTABLE
     !define PRODUCT_EXECUTABLE "${INFO_PROJECTNAME}.exe"
