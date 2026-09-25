@@ -37,6 +37,14 @@ echo "==> installing engine + deps into the bundled runtime"
 "$PY" -m pip install --upgrade pymupdf httpx pysbd pyahocorasick python-docx
 "$PY" -m pip install --ignore-installed --no-deps --no-cache-dir "$ENGINE"
 
+# pip 이 만든 콘솔 스크립트(pip·pytest·translate-engine …)를 지운다.
+#
+# 이 스크립트들의 shebang 에는 **빌드한 컴퓨터의 절대 경로**가 박힌다. 다른 컴퓨터에서는
+# 그 경로가 없으므로 어차피 실행되지 않고, 설치본에 빌드한 사람의 폴더 이름이 그대로
+# 실려 나간다. 앱은 엔진을 `python3 -s -m translate_engine` 으로 띄우므로(main.go)
+# 이것들을 쓰지 않는다. python 실행 파일만 남긴다.
+find resources/python/bin -type f ! -name 'python*' -delete
+
 echo "==> verifying"
 "$PY" -s -c "import translate_engine, pymupdf, httpx, pysbd, ahocorasick, docx; print('bundled python OK', translate_engine.__version__)"
 echo "done -> resources/python"

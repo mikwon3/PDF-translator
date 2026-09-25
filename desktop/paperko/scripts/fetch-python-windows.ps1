@@ -50,6 +50,13 @@ Invoke-Pip install --upgrade pip
 Invoke-Pip install --upgrade pymupdf httpx pysbd pyahocorasick python-docx
 Invoke-Pip install --ignore-installed --no-deps --no-cache-dir "$Engine"
 
+# pip 이 만든 콘솔 스크립트(Scripts\*.exe)를 지운다. 이 래퍼들에는 **빌드한 컴퓨터의
+# 절대 경로**가 박혀 다른 컴퓨터에서는 돌지 않고, 설치본에 빌드한 사람의 폴더 이름이
+# 그대로 실려 나간다. 앱은 엔진을 `python.exe -s -m translate_engine` 으로 띄우므로
+# 이것들을 쓰지 않는다 (macOS 쪽 fetch-python-macos.sh 도 같다).
+$Scripts = "bin\resources\python\Scripts"
+if (Test-Path $Scripts) { Remove-Item -Recurse -Force $Scripts }
+
 Write-Host "==> verifying"
 & $Py -s -c "import translate_engine, pymupdf, httpx, pysbd, ahocorasick, docx; print('bundled python OK', translate_engine.__version__)"
 Write-Host "done -> bin\resources\python  (python.exe at bin\resources\python\python.exe)"

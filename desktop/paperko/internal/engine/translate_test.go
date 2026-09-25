@@ -22,7 +22,7 @@ func TestSidecarConfigure(t *testing.T) {
 	}
 	root := os.Getenv("PAPERKO_ENGINE_ROOT")
 	if root == "" {
-		root = "/Volumes/LLM-model/Dropbox/App-develop/PDF-translator"
+		root = "/Volumes/LLM-model/App-develop/PDF-translator"
 	}
 	sup := NewSupervisor(Config{
 		Python:  filepath.Join(root, ".venv", "bin", "python"),
@@ -69,7 +69,7 @@ func TestSidecarRetranslate(t *testing.T) {
 	}
 	root := os.Getenv("PAPERKO_ENGINE_ROOT")
 	if root == "" {
-		root = "/Volumes/LLM-model/Dropbox/App-develop/PDF-translator"
+		root = "/Volumes/LLM-model/App-develop/PDF-translator"
 	}
 	pdf := filepath.Join(root, "engine-py", "tests", "fixtures", "sample.pdf")
 	dataDir := t.TempDir()
@@ -134,7 +134,7 @@ func TestSidecarTranslate(t *testing.T) {
 	}
 	root := os.Getenv("PAPERKO_ENGINE_ROOT")
 	if root == "" {
-		root = "/Volumes/LLM-model/Dropbox/App-develop/PDF-translator"
+		root = "/Volumes/LLM-model/App-develop/PDF-translator"
 	}
 	python := filepath.Join(root, ".venv", "bin", "python")
 	pdf := filepath.Join(root, "engine-py", "tests", "fixtures", "sample.pdf")
