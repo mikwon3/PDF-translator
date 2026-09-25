@@ -1,12 +1,21 @@
+# PaperKo
+
+Copyright 2026 경상국립대학교 (Gyeongsang National University)
+
+PaperKo 는 **GNU Affero General Public License v3.0 (AGPL-3.0)** 으로 배포합니다.
+전문은 [LICENSE](LICENSE) 에 있습니다.
+
+PDF 를 읽고 쓰는 핵심 의존성 **PyMuPDF 가 AGPL-3.0** 이므로, 그와 결합한 PaperKo
+전체가 AGPL-3.0 을 따릅니다. 이에 따라 앱 전체 소스를 같은 조건으로 공개합니다.
+
 # 제3자 구성요소
 
-PaperKo 가 함께 담거나 내려받아 쓰는 남의 것들이다. 저장소 라이선스를 정할 때
-이 목록을 근거로 삼는다.
+PaperKo 가 함께 담거나 내려받아 쓰는 남의 것들이다.
 
 아래 판본·저작권은 **설치된 꾸러미와 파일에서 직접 읽은 값**이다. "확인 필요" 로
 적힌 것은 이 저장소 안에 근거가 없어 확인하지 못한 것이다 — 추측으로 적지 않았다.
 
-## ⚠ 먼저 봐야 할 것 — PyMuPDF
+## PyMuPDF — 라이선스의 근거
 
 ```
 pymupdf 1.28.0
@@ -14,16 +23,9 @@ License: Dual Licensed - GNU AFFERO GPL 3.0 or Artifex Commercial License
 ```
 
 PDF 를 읽고 쓰는 핵심 의존성이고, **AGPL 3.0 또는 Artifex 상용 라이선스**다.
-AGPL 은 소프트웨어를 배포할 때 결합 저작물 전체의 소스를 같은 조건으로 공개할
-것을 요구한다. PaperKo 는 설치본으로 배포하는 앱이므로 다음 중 하나를 골라야
-한다.
-
-1. PaperKo 를 AGPL 로 공개한다.
-2. Artifex 에서 상용 라이선스를 산다.
-3. PDF 처리를 다른 라이브러리로 갈아 끼운다 (pypdfium2 는 Apache/BSD 계열).
-
-**이 선택을 하기 전에는 배포 범위를 넓히지 않는 편이 안전하다.** (법률 자문이
-아니다. 판단이 필요하면 전문가에게 확인하십시오.)
+AGPL 은 결합 저작물 전체의 소스를 같은 조건으로 공개할 것을 요구한다. PaperKo 는
+소스를 공개하고 **AGPL-3.0** 으로 배포하여 이 조건을 충족한다. (소스를 비공개한
+상용 배포를 원하면 Artifex 상용 라이선스가 필요하다. 법률 자문이 아니다.)
 
 ## 파이썬 의존성
 

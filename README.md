@@ -123,6 +123,10 @@ cd desktop/paperko
 
 ## 라이선스 / 표기
 
+PaperKo 는 **GNU Affero General Public License v3.0 (AGPL-3.0)** 으로 배포합니다
+(전문 [`LICENSE`](LICENSE)). PDF 처리 핵심 의존성인 PyMuPDF 가 AGPL-3.0 이라, 그와
+결합한 앱 전체가 AGPL-3.0 을 따르며 전체 소스를 같은 조건으로 공개합니다.
+
 번들 폰트(Nanum, Noto Sans CJK)와 서드파티 구성요소의 저작권·라이선스 표기는
 [`NOTICE.md`](NOTICE.md)를 참조하세요.
 
