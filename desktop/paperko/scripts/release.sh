@@ -77,4 +77,20 @@ git -C "$ROOT" tag -a "v$VERSION" -m "PaperKo $VERSION" 2>/dev/null || true
 gh release create "v$VERSION" --repo "$RELEASES" --title "PaperKo $VERSION" --notes-file "$NOTES" \
   "$DMG" "$EXE" "$OUT/manifest.json" "$OUT/manifest.json.sig"
 git -C "$ROOT" push -q origin HEAD --tags
-echo "완료: https://github.com/$RELEASES/releases/tag/v$VERSION"
+
+# 릴리스 저장소 README 의 "변경 이력" 섹션에 이번 판을 넣는다(최신순, 중복 시 교체).
+echo "== 릴리스 저장소 README 변경 이력 갱신 =="
+TAG_URL="https://github.com/$RELEASES/releases/tag/v$VERSION"
+RELDIR="$(mktemp -d)"; trap 'rm -f "$TOOL"; rm -rf "$RELDIR"' EXIT
+if gh repo clone "$RELEASES" "$RELDIR" -- -q --depth 1; then
+  if python3 "$APP_DIR/scripts/update-release-readme.py" "$RELDIR/README.md" "$VERSION" "$NOTES" "$TAG_URL" \
+     && [ -n "$(git -C "$RELDIR" status --porcelain -- README.md)" ]; then
+    git -C "$RELDIR" add README.md
+    git -C "$RELDIR" commit -q -m "README: add $VERSION to release history"
+    git -C "$RELDIR" push -q origin HEAD && echo "  ✓ README 변경 이력 푸시 완료"
+  fi
+else
+  echo "  ! 릴리스 저장소를 클론하지 못해 README 갱신을 건너뜁니다(수동 반영 필요)"
+fi
+
+echo "완료: $TAG_URL"
