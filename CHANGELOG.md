@@ -5,6 +5,15 @@ All notable changes to PaperKo are recorded here. Versioning follows
 under the **same** version number; the JSON-RPC `protocol_version` and IR
 `ir_version` are tracked separately.
 
+## [1.8.6] — 2026-09-26
+
+### Changed
+- **Build/release tooling only — no app behavior change.** `release.sh` now updates the
+  releases repo README "변경 이력" section automatically after publishing (via
+  `scripts/update-release-readme.py`). Removed the unused Windows MSIX packaging path
+  (`build/windows/msix/` and its dormant Taskfile tasks) and the leftover "My Company"
+  placeholder; Windows distribution stays NSIS.
+
 ## [1.8.5] — 2026-09-26
 
 ### Changed
